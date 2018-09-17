@@ -41,7 +41,7 @@ ys = ys.tolist()
 source = ColumnDataSource(data={
     'x': xs,
     'y': ys,
-    'temp_anomalie': (climate_data.loc[1980, 1].iloc[1:-1, 2:-1].values.reshape(-1, 1)) / 100,
+    'temp_anomalies': (climate_data.loc[1980, 1].iloc[1:-1, 2:-1].values.reshape(-1, 1)) / 100,
 })
 
 
