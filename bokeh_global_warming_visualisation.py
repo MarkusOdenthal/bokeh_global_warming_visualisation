@@ -13,7 +13,8 @@ from bokeh.models import GMapOptions
 
 # color patches
 from bokeh.models import LinearColorMapper, ColorBar
-from bokeh.palettes import RdBu11 as palette
+from bokeh.colors import RGB
+from matplotlib import cm
 
 # widgetbox for the app
 from bokeh.layouts import widgetbox, column
@@ -64,7 +65,9 @@ def update_plot(attr, old, new):
 
 
 # create the plot
-color_mapper = LinearColorMapper(palette=palette, low=-5, high=5)
+m_coolwarm_rgb = (255 * cm.coolwarm(range(256))).astype('int')
+coolwarm_palette = [RGB(*tuple(rgb)).to_hex() for rgb in m_coolwarm_rgb]
+color_mapper = LinearColorMapper(palette=coolwarm_palette, low=-2, high=2)
 
 map_options = GMapOptions(lat=38.733680, lng=-9.173207, map_type="roadmap", zoom=3)
 p = gmap("API-KEy",
@@ -72,7 +75,7 @@ p = gmap("API-KEy",
 
 p.patches('x', 'y', source=source,
           fill_color={'field': 'temp_anomalies', 'transform': color_mapper},
-          fill_alpha=0.3, line_color=None)
+          fill_alpha=0.5, line_color=None)
 
 color_bar = ColorBar(color_mapper=color_mapper,
                      label_standoff=12, border_line_color=None, location=(0,0))
@@ -80,7 +83,7 @@ p.add_layout(color_bar, 'right')
 
 # Make a slider object: slider
 slider = DateSlider(title="Date", value=min(climate_data.index), start=min(climate_data.index),
-                    end=max(climate_data.index), step=1, width=1200)
+                    end=max(climate_data.index), step=1, width=900)
 
 # Attach the callback to the 'value' property of slider
 slider.on_change('value', update_plot)
